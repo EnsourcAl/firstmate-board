@@ -8,14 +8,16 @@
   body { margin: 0; background: #f7f6f3; color: #161616; font-family: system-ui, sans-serif; }
   main { max-width: 640px; margin: 0 auto; padding: 24px 16px 72px; }
   h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.03em; margin: 0; }
-  .asof { color: #6b6b6b; font-size: 0.92rem; margin: 6px 0 28px; }
+  .asof { color: #6b6b6b; font-size: 0.92rem; margin: 6px 0 8px; }
+  .basis { color: #6b6b6b; font-size: 0.88rem; margin: 0 0 28px; }
   article { margin: 0 0 44px; }
   figure { margin: 0; }
   img { width: 100%; height: auto; display: block; border-radius: 12px; background: #e7e5e0; }
   .kicker { margin: 12px 0 0; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: #8a8a8a; }
   h2 { font-size: 1.2rem; margin: 2px 0 0; font-weight: 650; }
-  .price { font-size: 1.65rem; font-weight: 750; margin: 4px 0 0; letter-spacing: -0.03em; }
-  .facts { margin: 6px 0 0; color: #333; line-height: 1.4; }
+  .total { font-size: 2rem; font-weight: 800; margin: 8px 0 0; letter-spacing: -0.03em; }
+  .split { margin: 2px 0 0; color: #333; }
+  .facts { margin: 8px 0 0; color: #333; line-height: 1.4; }
   .note { margin: 8px 0 0; color: #8a5a00; font-size: 0.95rem; }
   a { color: #0b57d0; }
 </style>
@@ -24,13 +26,15 @@
 <main>
   <h1>Red Model 3 shortlist</h1>
   <p class="asof">Friday, Oct 2, 2026, evening MT. Four cars. The first three are the hunt. Number 4 is local, keep or drop.</p>
+  <p class="basis">The big number is loan plus FSD, per month. Loan is 72 months at 8.39% on the price shown, before tax. A car without FSD gets $100 a month added.</p>
 
   <article>
     <figure><img src="1-hotsprings.jpg" alt="Red 2018 Tesla Model 3 at Robo Rides in Hot Springs"></figure>
     <p class="kicker">1</p>
     <h2>Robo Rides, Hot Springs, Arkansas</h2>
-    <p class="price">$18,900</p>
-    <p class="facts">2018 Long Range, rear-wheel drive. About 87,500 miles. FSD on the screen as Included.<br>VIN 5YJ3E1EA1JF061852</p>
+    <p class="total">$335</p>
+    <p class="split">Loan $335 · FSD $0</p>
+    <p class="facts">2018 Long Range, rear-wheel drive. About 87,500 miles. FSD on the screen as Included. Price $18,900.<br>VIN 5YJ3E1EA1JF061852</p>
     <p class="note">Battery and drive warranty date in the ad (Sep 23, 2026) is already past. Phone did not answer.</p>
     <p><a href="https://www.findmyelectric.com/listings/2018-tesla-model-3-long-range-rwd-365795/">Listing</a></p>
   </article>
@@ -39,8 +43,9 @@
     <figure><img src="2-premier.jpg" alt="Red 2018 Tesla Model 3 at Premier Automotive in Dumfries"></figure>
     <p class="kicker">2</p>
     <h2>Premier Automotive, Dumfries, Virginia</h2>
-    <p class="price">$17,999</p>
-    <p class="facts">2018 Long Range. 58,936 miles. No FSD.<br>VIN 5YJ3E1EB1JF087991</p>
+    <p class="total">$419</p>
+    <p class="split">Loan $319 · FSD $100</p>
+    <p class="facts">2018 Long Range. 58,936 miles. No FSD. Price $17,999.<br>VIN 5YJ3E1EB1JF087991</p>
     <p><a href="https://www.cars.com/vehicledetail/4758ed78-f708-4456-934f-987b4f219648/">Listing</a></p>
   </article>
 
@@ -48,8 +53,9 @@
     <figure><img src="3-evo.jpg" alt="Red 2017 Tesla Model 3 at EVO Motors in Seffner"></figure>
     <p class="kicker">3</p>
     <h2>EVO Motors, Seffner, Florida</h2>
-    <p class="price">$18,994</p>
-    <p class="facts">2017 Long Range, rear-wheel drive. 35,809 miles. No FSD. Plus about $995 doc, so about $19,989.<br>VIN 5YJ3E1EA8HF001903</p>
+    <p class="total">$454</p>
+    <p class="split">Loan $354 · FSD $100</p>
+    <p class="facts">2017 Long Range, rear-wheel drive. 35,809 miles. No FSD. Price $18,994 plus about $995 doc, so the loan is on $19,989.<br>VIN 5YJ3E1EA8HF001903</p>
     <p class="note">Several owners. Title brand not stated. Autotrader says Long Range. The dealer site once said Standard.</p>
     <p><a href="https://www.autotrader.com/cars-for-sale/vehicle/788268472">Listing</a></p>
   </article>
@@ -58,9 +64,10 @@
     <figure><img src="4-slc.jpg" alt="Red 2018 Tesla Model 3 at Porsche Salt Lake City"></figure>
     <p class="kicker">4, local, keep or drop</p>
     <h2>Porsche Salt Lake City</h2>
-    <p class="price">$22,597</p>
-    <p class="facts">2018 Long Range, all-wheel drive. 38,182 miles. No FSD.<br>VIN 5YJ3E1EBXJF104626</p>
-    <p class="note">Last because it costs more and has no FSD, even with low miles and being local.</p>
+    <p class="total">$501</p>
+    <p class="split">Loan $401 · FSD $100</p>
+    <p class="facts">2018 Long Range, all-wheel drive. 38,182 miles. No FSD. Price $22,597.<br>VIN 5YJ3E1EBXJF104626</p>
+    <p class="note">Last because the monthly total is the highest, even with low miles and being local.</p>
     <p><a href="https://www.dealerrater.com/classifieds/2018-Tesla-Model-3-ad-5YJ3E1EBXJF104626-41712/">Listing</a></p>
   </article>
 </main>
