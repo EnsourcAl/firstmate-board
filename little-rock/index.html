@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Little Rock tonight</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  body { margin: 0; background: #f7f6f3; color: #161616; font-family: system-ui, sans-serif; }
+  h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.03em; margin: 0; }
+  a { color: #0b57d0; }
+
+  #gate { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  #gate form { display: flex; gap: 8px; }
+  #gate input { flex: 1; font: inherit; font-size: 1rem; padding: 12px; border-radius: 12px; border: 1px solid #d7d4ce; }
+  #gate button { font: inherit; font-weight: 700; padding: 12px 16px; border-radius: 12px; border: 0; background: #161616; color: #fff; }
+  #gate .miss { color: #8a1f1f; min-height: 1.2em; }
+  html:not(.open) main { display: none !important; }
+  html.open #gate { display: none; }
+
+  main { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+  #map { flex: 1 1 58%; min-height: 300px; }
+  #panel { flex: 1 1 42%; overflow-y: auto; padding: 12px 16px calc(24px + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid #e7e5e0; box-sizing: border-box; }
+  @media (min-width: 900px) {
+    main { flex-direction: row-reverse; }
+    #map { flex: 1 1 auto; }
+    #panel { flex: 0 0 380px; border-top: 0; border-right: 1px solid #e7e5e0; }
+  }
+  .asof { color: #6b6b6b; font-size: 0.86rem; margin: 4px 0 10px; line-height: 1.4; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+  .legend button { font: inherit; font-size: 0.8rem; font-weight: 650; padding: 7px 10px; border-radius: 999px; border: 1px solid #d7d4ce; background: #fff; color: #161616; display: inline-flex; align-items: center; gap: 6px; }
+  .legend button.off { opacity: 0.4; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+  h2 { font-size: 1.05rem; margin: 14px 0 6px; }
+  ol.tonight { margin: 0; padding-left: 22px; }
+  ol.tonight li { margin: 0 0 10px; line-height: 1.4; font-size: 0.92rem; }
+  ol.tonight b { cursor: pointer; text-decoration: underline dotted; }
+  .t { color: #6b6b6b; font-size: 0.82rem; font-weight: 650; }
+  .note { font-size: 0.82rem; color: #6b6b6b; line-height: 1.4; margin: 10px 0 0; }
+  .closed-list { font-size: 0.85rem; line-height: 1.45; margin: 0; padding-left: 18px; }
+  .pop h3 { margin: 0 0 2px; font-size: 1rem; }
+  .pop .cat { font-size: 0.7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+  .pop p { margin: 6px 0; font-size: 0.88rem; line-height: 1.35; }
+  .pop .hrs { background: #f3f1ec; padding: 6px 8px; border-radius: 8px; }
+  .pop .warn { color: #8a1f1f; font-weight: 650; }
+  .pop .links a { display: inline-block; margin: 4px 10px 0 0; font-weight: 650; }
+  .locate { background: #fff; border-radius: 8px; border: 2px solid rgba(0,0,0,.2); font-size: 1.25rem; width: 44px; height: 44px; line-height: 40px; text-align: center; cursor: pointer; padding: 0; }
+</style>
+<script>
+  // Password required. Keep OPEN_UNTIL in the past so the map is not world-open.
+  var OPEN_UNTIL = Date.parse("2026-10-05T00:00:00-06:00");
+  if (Date.now() < OPEN_UNTIL) document.documentElement.classList.add("open");
+</script>
+</head>
+<body>
+<div id="gate">
+  <h1>Little Rock tonight</h1>
+  <form id="gate-form">
+    <input id="gate-pass" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password">
+    <button type="submit">Open</button>
+  </form>
+  <p class="miss" id="gate-miss"></p>
+</div>
+<main>
+  <div id="map" role="region" aria-label="Map of Little Rock sights"></div>
+  <section id="panel">
+    <h1>Little Rock tonight</h1>
+    <p class="asof">Mon Oct 5, 2026 · built 4:45 PM CT · <b>Sunset 6:48 PM CT</b> (light lasts until about 7:13 PM). Hours were checked online today and are for <b>Monday</b>.</p>
+    <div class="legend" id="legend"></div>
+
+    <h2>Tonight, ranked</h2>
+    <ol class="tonight">
+      <li><span class="t">Now–5:00 PM</span> <b data-id="capitol">State Capitol + Little Rock Nine "Testament"</b>: the building is open until 5 PM on weekdays, so a quick look at the rotunda is possible. The grounds and the bronze Little Rock Nine statues stay open after that.</li>
+      <li><span class="t">~5:15 PM</span> <b data-id="chs">Central High NHS</b>: the visitor center is closed Mondays. The commemorative garden and the view of the school's front stay open until sunset.</li>
+      <li><span class="t">~5:45–6:25 PM</span> <b data-id="oldmill">The Old Mill</b>: the prettiest spot in town in golden hour. It's the mill from the opening of Gone With the Wind. <b class="warn" style="text-decoration:none;cursor:auto">Closes at sunset.</b></li>
+      <li><span class="t">6:48 PM sunset</span> <b data-id="bigdam">Big Dam Bridge</b>: open 24 hours. Watch the sun go down over the river from the 90-ft-high deck, then stay for the LED light show.</li>
+      <li><span class="t">After dark</span> <b data-id="junction">Junction Bridge + Riverfront Park</b>: the River Lights in the Rock display and the original "little rock" (La Petite Roche). Bridge and park close around 10 PM.</li>
+      <li><span class="t">Dinner, until 9 PM</span> <b data-id="lost40">Lost Forty Brewing</b> or a walk through the <b data-id="rivermarket">River Market</b>.</li>
+    </ol>
+
+    <h2>Closed or closing by 5 PM today</h2>
+    <ul class="closed-list">
+      <li><b>Closes 5 PM:</b> Clinton Presidential Center, State Capitol building, Pinnacle Mtn visitor center (the park itself stays open until 1 hr after sunset)</li>
+      <li><b>Closed Monday:</b> Old State House, Arkansas Museum of Fine Arts, MacArthur Military History Museum, Mosaic Templars, Central High visitor center, USS Razorback (Fri–Sun only)</li>
+      <li><b>Dropped:</b> Heifer Village (public space closed Dec 2022; the building was sold in 2025)</li>
+    </ul>
+    <p class="note">Tap a name to jump to it on the map. ◎ = locate me. Map data © OpenStreetMap contributors.</p>
+  </section>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+  var CATS = {
+    scenic:  { label: "Beautiful / sunset", color: "#f2711c" },
+    historic:{ label: "Historic",           color: "#a3312a" },
+    museum:  { label: "Museums",            color: "#5b3fb5" },
+    food:    { label: "Food / walkable",    color: "#1f8a4c" }
+  };
+  var PLACES = [
+    { id:"bigdam", cat:"scenic", name:"Big Dam Bridge", lat:34.7909, lng:-92.3597, q:"Big Dam Bridge, Little Rock, AR",
+      why:"At 4,226 ft, it's the longest bridge in North America built only for walkers and bikes. Best sunset over the Arkansas River, and the LEDs light up after dark.",
+      hrs:"Open 24 hours. Park at Murray Park (LR side) or Cook's Landing (NLR side)." },
+    { id:"junction", cat:"scenic", name:"Junction Bridge", lat:34.7512, lng:-92.2663, q:"Junction Bridge, Little Rock, AR",
+      why:"A 1970s rail lift bridge (on an 1884 crossing) turned into a footbridge in 2008, lit every night as part of River Lights in the Rock. Great downtown skyline views.",
+      hrs:"About 6 AM–10 PM (city curfew; confirm on site)." },
+    { id:"tworivers", cat:"scenic", name:"Two Rivers Park Bridge", lat:34.7994, lng:-92.3832, q:"Two Rivers Park Bridge, Little Rock, AR",
+      why:"A quiet, curving footbridge over the Little Maumelle into Two Rivers Park, with wide-open river and sky views.",
+      hrs:"Listed 8 AM–8 PM daily (third-party listing, not confirmed by the city).", warn:"Hours uncertain" },
+    { id:"riverfront", cat:"scenic", name:"Riverfront Park / La Petite Roche", lat:34.7502, lng:-92.2668, q:"La Petite Roche Plaza, Riverfront Park, Little Rock, AR",
+      why:"The actual 'little rock' the city is named for, plus a riverside promenade beside the lit Junction Bridge.",
+      hrs:"Park open about 6 AM–10 PM." },
+    { id:"oldmill", cat:"scenic", name:"The Old Mill (T.R. Pugh Park)", lat:34.7917, lng:-92.2494, q:"The Old Mill, North Little Rock, AR",
+      why:"A storybook 1933 mill with a pond and faux-bois sculptures by Dionicio Rodriguez. It appears in the opening of Gone With the Wind.",
+      hrs:"8 AM until sunset (6:48 PM tonight). No pets.", warn:"Closes at sunset" },
+    { id:"pinnacle", cat:"scenic", name:"Pinnacle Mountain State Park", lat:34.8424, lng:-92.4945, q:"Pinnacle Mountain State Park Visitor Center, Roland, AR",
+      why:"A cone-shaped peak with sweeping Arkansas River valley views. The summit climb is steep (about 1.5 hr round trip), so it's too tight for tonight.",
+      hrs:"Park 6:30 AM to 1 hr after sunset (~7:48 PM). Visitor center 8 AM–5 PM.", warn:"Visitor center closes 5 PM · 25 min drive" },
+
+    { id:"chs", cat:"historic", name:"Little Rock Central High School NHS", lat:34.7372, lng:-92.3002, q:"Little Rock Central High School National Historic Site, Little Rock, AR",
+      why:"Where the Little Rock Nine integrated the school in 1957. The building is a working high school and a landmark of the civil-rights movement.",
+      hrs:"Grounds and commemorative garden open 7 AM–sunset. Visitor center open Tue–Sat 10–4.", warn:"Visitor center closed Monday" },
+    { id:"capitol", cat:"historic", name:"Arkansas State Capitol", lat:34.7466, lng:-92.2892, q:"Arkansas State Capitol, Little Rock, AR",
+      why:"A neoclassical capitol with a gold-leafed dome, marble interiors, and bronze doors from Tiffany's.",
+      hrs:"Building open 8 AM–5 PM on weekdays. Grounds open after hours.", warn:"Building closes 5 PM" },
+    { id:"testament", cat:"historic", name:"\"Testament\" – Little Rock Nine Memorial", lat:34.7479, lng:-92.2891, q:"Testament Little Rock Nine Memorial, Arkansas State Capitol, Little Rock, AR",
+      why:"Life-size bronzes of the nine students, on the Capitol lawn where Governor Faubus defied them in 1957.",
+      hrs:"Outdoor memorial on the Capitol grounds, always viewable." },
+    { id:"oldstate", cat:"historic", name:"Old State House Museum", lat:34.7490, lng:-92.2726, q:"Old State House Museum, 300 W Markham St, Little Rock, AR",
+      why:"Built in 1833, it's the oldest standing state capitol west of the Mississippi. Clinton gave both of his election-night speeches here.",
+      hrs:"Tue–Sat 9–5, Sun 1–5. Free.", warn:"Closed Monday. You can still see the facade from Markham St." },
+    { id:"quapaw", cat:"historic", name:"Quapaw Quarter (Governor's Mansion district)", lat:34.7330, lng:-92.2740, q:"Arkansas Governor's Mansion, 1800 Center St, Little Rock, AR",
+      why:"Little Rock's oldest neighborhoods, full of Victorian and Greek Revival homes. Drive or stroll Center, Scott, and Louisiana Streets. Villa Marre is at 1404 Scott.",
+      hrs:"Public streets, so you can visit anytime. Most homes are private and viewed from the street. Go before dark for photos." },
+
+    { id:"clinton", cat:"museum", name:"Clinton Presidential Center", lat:34.7463, lng:-92.2584, q:"William J. Clinton Presidential Library, 1200 President Clinton Ave, Little Rock, AR",
+      why:"The presidential museum is cantilevered over the river, with a full-size Oval Office replica. The surrounding park and wetlands are lovely at dusk.",
+      hrs:"Museum Mon–Sat 9–5, Sun 1–5.", warn:"Closes 5 PM, so it's too late for the museum today. Walk the park instead." },
+    { id:"macarthur", cat:"museum", name:"MacArthur Park + Museum of Military History", lat:34.7384, lng:-92.2653, q:"MacArthur Museum of Arkansas Military History, 503 E 9th St, Little Rock, AR",
+      why:"The 1840s Tower Building of the Little Rock Arsenal, where Douglas MacArthur was born, set in the city's oldest park.",
+      hrs:"Museum Tue–Sat 10–5, Sun 1–5. The park is open.", warn:"Museum closed Monday" },
+    { id:"amfa", cat:"museum", name:"Arkansas Museum of Fine Arts", lat:34.7383, lng:-92.2664, q:"Arkansas Museum of Fine Arts, 501 E 9th St, Little Rock, AR",
+      why:"A striking Studio Gang building (2023) with a pleated roof and a free collection. Its 'Cultural Corridor' wraps around MacArthur Park.",
+      hrs:"Tue 10–5, Wed–Fri 10–8, Sat 10–5, Sun 12–5. Free.", warn:"Closed Monday" },
+    { id:"mosaic", cat:"museum", name:"Mosaic Templars Cultural Center", lat:34.7407, lng:-92.2771, q:"Mosaic Templars Cultural Center, 501 W 9th St, Little Rock, AR",
+      why:"African American history in Arkansas, on historic West Ninth Street, once the heart of Black business in the city.",
+      hrs:"Tue–Sat 9 AM–4 PM (official FAQ). Free.", warn:"Closed Monday" },
+    { id:"razorback", cat:"museum", name:"USS Razorback / Arkansas Inland Maritime Museum", lat:34.7521, lng:-92.2669, q:"Arkansas Inland Maritime Museum, 120 Riverfront Dr, North Little Rock, AR",
+      why:"A WWII submarine that was in Tokyo Bay for the Japanese surrender, moored on the North Shore by the Junction Bridge.",
+      hrs:"Fri–Sat 10–5, Sun 1–5 (last tour 4:30).", warn:"Closed Mon–Thu. You can see the sub from the riverwalk." },
+
+    { id:"rivermarket", cat:"food", name:"River Market District", lat:34.7477, lng:-92.2661, q:"River Market District, President Clinton Ave, Little Rock, AR",
+      why:"A walkable strip of bars and restaurants along President Clinton Ave, right by the river, Junction Bridge, and Clinton Park.",
+      hrs:"Restaurants keep their own hours. The Ottenheimer Market Hall food hall closes at 2 PM on Mondays and is slated for a revamp." },
+    { id:"flyingfish", cat:"food", name:"Flying Fish", lat:34.7472, lng:-92.2651, q:"Flying Fish, 511 President Clinton Ave, Little Rock, AR",
+      why:"A casual River Market seafood spot for catfish, shrimp, and po'boys.",
+      hrs:"Sun–Thu 11 AM–9 PM.", warn:"Its site shows an undated 'closed today for parking lot repair' notice. Call (501) 375-3474 first." },
+    { id:"lost40", cat:"food", name:"Lost Forty Brewing", lat:34.7428, lng:-92.2600, q:"Lost Forty Brewing, 501 Byrd St, Little Rock, AR",
+      why:"A big brewery taproom with good food in the Hanger Hill area, 5 min from the River Market.",
+      hrs:"Mon–Sat 11 AM–9 PM (official site)." }
+  ];
+
+  var map, layers = {}, markers = {};
+  function gmaps(p) { return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.q); }
+  function directions(p) { return "https://www.google.com/maps/dir/?api=1&destination=" + p.lat + "," + p.lng; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  function initMap() {
+    if (map) { map.invalidateSize(); return; }
+    map = L.map("map", { zoomControl: true }).setView([34.765, -92.33], 12);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    Object.keys(CATS).forEach(function (k) { layers[k] = L.layerGroup().addTo(map); });
+    var bounds = [];
+    PLACES.forEach(function (p) {
+      var c = CATS[p.cat];
+      var m = L.circleMarker([p.lat, p.lng], { radius: 10, color: "#fff", weight: 2, fillColor: c.color, fillOpacity: 0.95 });
+      m.bindPopup(
+        '<div class="pop"><span class="cat" style="color:' + c.color + '">' + esc(c.label) + '</span>' +
+        '<h3>' + esc(p.name) + '</h3><p>' + esc(p.why) + '</p>' +
+        '<p class="hrs"><b>Today (Mon):</b> ' + esc(p.hrs) + (p.warn ? '<br><span class="warn">' + esc(p.warn) + '</span>' : '') + '</p>' +
+        '<p class="links"><a href="' + gmaps(p) + '" target="_blank" rel="noopener">Google Maps</a><a href="' + directions(p) + '" target="_blank" rel="noopener">Directions</a></p></div>',
+        { maxWidth: 280 }
+      );
+      m.addTo(layers[p.cat]);
+      markers[p.id] = m;
+      bounds.push([p.lat, p.lng]);
+    });
+    map.fitBounds(bounds, { padding: [24, 24] });
+
+    var Locate = L.Control.extend({
+      options: { position: "topleft" },
+      onAdd: function () {
+        var b = L.DomUtil.create("button", "locate");
+        b.type = "button"; b.title = "Locate me"; b.setAttribute("aria-label", "Locate me"); b.textContent = "◎";
+        L.DomEvent.disableClickPropagation(b);
+        L.DomEvent.on(b, "click", locate);
+        return b;
+      }
+    });
+    map.addControl(new Locate());
+  }
+
+  var meDot, meRing;
+  function locate() {
+    if (!navigator.geolocation) { alert("Geolocation isn't available in this browser."); return; }
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      var ll = [pos.coords.latitude, pos.coords.longitude], acc = pos.coords.accuracy || 50;
+      if (meDot) { meDot.setLatLng(ll); meRing.setLatLng(ll).setRadius(acc); }
+      else {
+        meRing = L.circle(ll, { radius: acc, color: "#0b57d0", weight: 1, fillOpacity: 0.12 }).addTo(map);
+        meDot = L.circleMarker(ll, { radius: 7, color: "#fff", weight: 2, fillColor: "#0b57d0", fillOpacity: 1 }).addTo(map).bindPopup("You are here");
+      }
+      map.setView(ll, Math.max(map.getZoom(), 14));
+    }, function (err) { alert("Couldn't get your location: " + err.message); }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+  }
+
+  var legend = document.getElementById("legend");
+  Object.keys(CATS).forEach(function (k) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = '<span class="dot" style="background:' + CATS[k].color + '"></span>' + esc(CATS[k].label);
+    b.addEventListener("click", function () {
+      if (!map) return;
+      if (map.hasLayer(layers[k])) { map.removeLayer(layers[k]); b.classList.add("off"); }
+      else { map.addLayer(layers[k]); b.classList.remove("off"); }
+    });
+    legend.appendChild(b);
+  });
+  document.querySelectorAll("[data-id]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      var m = markers[el.dataset.id]; if (!m) return;
+      var p = PLACES.filter(function (x) { return x.id === el.dataset.id; })[0];
+      if (!map.hasLayer(layers[p.cat])) map.addLayer(layers[p.cat]);
+      map.setView(m.getLatLng(), 15); m.openPopup();
+      document.getElementById("map").scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  // Build the map only once the gate is open (Leaflet needs a visible container).
+  if (document.documentElement.classList.contains("open")) initMap();
+  new MutationObserver(function () {
+    if (document.documentElement.classList.contains("open")) setTimeout(initMap, 0);
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+</script>
+<script>
+  var PASS_HASH = "7867816edcbc2ea5745874fdb6594f1d7a9695cc12c8d5498828017b6748b8c5";
+  document.getElementById("gate-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var text = document.getElementById("gate-pass").value;
+    crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buf) {
+      var hex = Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+      if (hex === PASS_HASH) {
+        document.documentElement.classList.add("open");
+        document.getElementById("gate-miss").textContent = "";
+      } else {
+        document.getElementById("gate-miss").textContent = "Wrong password.";
+      }
+    });
+  });
+</script>
+</body>
+</html>
