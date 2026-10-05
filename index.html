@@ -6,24 +6,35 @@
 <title>Tesla shortlist</title>
 <style>
   body { margin: 0; background: #f7f6f3; color: #161616; font-family: system-ui, sans-serif; }
-  main { max-width: 640px; margin: 0 auto; padding: 24px 16px 72px; }
+  main { max-width: 720px; margin: 0 auto; padding: 24px 16px 72px; }
   h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.03em; margin: 0; }
   .asof { color: #6b6b6b; font-size: 0.92rem; margin: 6px 0 8px; }
-  .tabs { display: flex; gap: 8px; margin: 0 0 16px; }
-  .tabs button { flex: 1; font: inherit; font-weight: 700; font-size: 1rem; padding: 12px 8px; border-radius: 12px; border: 1px solid #d7d4ce; background: #fff; color: #161616; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+  .tabs button { flex: 1 1 100px; font: inherit; font-weight: 700; font-size: 0.92rem; padding: 12px 8px; border-radius: 12px; border: 1px solid #d7d4ce; background: #fff; color: #161616; }
   .tabs button.on { background: #161616; color: #fff; border-color: #161616; }
-  .basis { color: #6b6b6b; font-size: 0.88rem; margin: 0 0 28px; }
-  article { margin: 0 0 44px; }
+  .basis { color: #6b6b6b; font-size: 0.88rem; margin: 0 0 20px; line-height: 1.45; }
+  article { margin: 0 0 36px; padding-bottom: 8px; border-bottom: 1px solid #e7e5e0; }
+  article:last-child { border-bottom: 0; }
   figure { margin: 0; }
   img { width: 100%; height: auto; display: block; border-radius: 12px; background: #e7e5e0; }
   .kicker { margin: 12px 0 0; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: #8a8a8a; }
-  h2 { font-size: 1.2rem; margin: 2px 0 0; font-weight: 650; }
-  .total { font-size: 2rem; font-weight: 800; margin: 8px 0 0; letter-spacing: -0.03em; }
+  h2 { font-size: 1.15rem; margin: 2px 0 0; font-weight: 650; }
+  h3 { font-size: 1rem; margin: 28px 0 8px; font-weight: 700; }
+  .total { font-size: 1.75rem; font-weight: 800; margin: 8px 0 0; letter-spacing: -0.03em; }
   .split { margin: 2px 0 0; color: #333; }
-  .facts { margin: 8px 0 0; color: #333; line-height: 1.4; }
+  .facts { margin: 8px 0 0; color: #333; line-height: 1.45; }
+  .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; margin: 8px 8px 0 0; }
+  .badge.live { background: #d7f5d9; color: #14601c; }
+  .badge.pending { background: #fff0c2; color: #7a5a00; }
+  .badge.flag { background: #e8e4ff; color: #3b2f8a; }
+  .badge.warn { background: #f5e0d7; color: #7a2e14; }
   a { color: #0b57d0; }
   .panel { display: none; }
   .panel.on { display: block; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 0 0 24px; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #e7e5e0; vertical-align: top; }
+  th { color: #6b6b6b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .note { font-size: 0.85rem; color: #6b6b6b; margin: 0 0 16px; line-height: 1.4; }
 
   #gate { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
   #gate form { display: flex; gap: 8px; }
@@ -34,8 +45,8 @@
   html.open #gate { display: none; }
 </style>
 <script>
-  // Password turns itself back on at this instant. Bump it 24h from each ask about this site.
-  var OPEN_UNTIL = Date.parse("2026-10-05T19:04:00-06:00");
+  // Password required. Keep OPEN_UNTIL in the past so the shortlist is not world-open.
+  var OPEN_UNTIL = Date.parse("2026-10-05T00:00:00-06:00");
   if (Date.now() < OPEN_UNTIL) document.documentElement.classList.add("open");
 </script>
 </head>
@@ -50,70 +61,372 @@
 </div>
 <main>
   <h1>Tesla shortlist</h1>
-  <p class="asof">Friday, Oct 2, 2026, evening MT.</p>
+  <p class="asof">Monday, Oct 5, 2026, ~2:00 PM MT. Live dealer pages preferred.</p>
   <nav class="tabs">
-    <button type="button" class="on" data-tab="easy">Easy trip</button>
-    <button type="button" data-tab="fsd">Has FSD</button>
+    <button type="button" class="on" data-tab="lr3">LR Model 3s</button>
+    <button type="button" data-tab="y">Model Y</button>
+    <button type="button" data-tab="compare">Compare</button>
+    <button type="button" data-tab="prior">Prior / FSD</button>
   </nav>
 
-  <section id="easy" class="panel on">
-    <p class="basis">Frontier airport first, then the monthly total. The big number is loan plus FSD, per month. Loan is 72 months at 8.39% on the price shown, before tax. None of these have purchased FSD, so each gets $100 added. These four are red. Other colors are allowed again and will land here when they check out.</p>
+  <section id="lr3" class="panel on">
+    <p class="basis">Little Rock metro Model 3s under ~$25k, LIVE on dealer pages today. No live Model Y under $25k in LR metro (~90 mi).</p>
+
+    <article>
+      <span class="badge live">Live</span>
+      <p class="kicker">1 · Porsche Little Rock · ~15–25 min from LIT</p>
+      <h2>2021 Model 3 Standard Range Plus</h2>
+      <p class="total">~$17,491</p>
+      <p class="split">Vehicle ~$17,491 · total with add-ons ~$19,410</p>
+      <p class="facts">110,210 mi · VIN 5YJ3E1EA1MF083077<br>
+      516 Colonel Glenn Plaza Loop, Little Rock AR<br>
+      In-transit / Confirm Availability on dealer page. FSD not stated.</p>
+      <p><a href="https://www.porschelittlerock.com/used-Little+Rock-2021-Tesla-Model+3-Standard+Range+Plus-5YJ3E1EA1MF083077">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live</span>
+      <p class="kicker">2 · Crain Conway · ~35–45 min from LIT</p>
+      <h2>2020 Model 3 Standard</h2>
+      <p class="total">~$19,500–$19,629</p>
+      <p class="split">~$19,500 retail · ~$19,629 with S&amp;H on some Crain pages</p>
+      <p class="facts">112,330 mi · VIN 5YJ3E1EA4LF634696<br>
+      810 S Amity Rd, Conway AR<br>
+      Also listed at Crain Chevrolet Little Rock (same stock). FSD not stated.</p>
+      <p><a href="https://www.crainkiaofconway.com/used-Conway-2020-Tesla-Model+3-Standard-5YJ3E1EA4LF634696">Dealer listing</a></p>
+    </article>
+  </section>
+
+  <section id="y" class="panel">
+    <p class="basis">Captain white-Y candidate first (pending detail), then Lot dealer-page LIVE Model Ys under ~$25k. Cars.com-only cheap lots are labeled separately as unverified.</p>
+
+    <h3>Captain candidate · PENDING DETAIL</h3>
+    <article>
+      <span class="badge pending">Pending detail</span>
+      <p class="kicker">White Model Y · year TBD</p>
+      <h2>White Model Y (captain)</h2>
+      <p class="total">~$18,500</p>
+      <p class="facts">~170k mi · ~80% SOH (captain-stated) · clean title · FSD subscription (not purchased Included)<br>
+      No exact live match yet. Closest dealer-verified whites flagged below (Diplomat Troutdale / Nissan Costa Mesa).</p>
+    </article>
+
+    <h3>LR metro Model Y under $25k</h3>
+    <p class="note">NONE live within ~90–100 mi of Little Rock. Nearest under-band dealer Y: Melton Claremore OK (~217 mi).</p>
+
+    <h3>LIVE on dealer page (Lot verified · prefer these)</h3>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Sam Leman CDJR · Bloomington IL · ~435 mi</p>
+      <h2>2021 Model Y Standard Range RWD · White</h2>
+      <p class="total">$22,262</p>
+      <p class="facts">64,399 mi · VIN 5YJYGAEDXMF181647 · Bloomington Only Sale Price (doc $377, ERT $35 on page)<br>FSD not stated.</p>
+      <p><a href="https://www.samlemanchryslerjeepdodge.com/inventory/used-2021-tesla-model-y-standard-range-rwd-4d-sport-utility-5yjygaedxmf181647/">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Victory Ottawa KS · ~334 mi</p>
+      <h2>2021 Model Y Long Range AWD · Red</h2>
+      <p class="total">$22,099</p>
+      <p class="facts">117,963 mi · VIN 5YJYGDEEXMF116100 · Victory Price (admin fee $599 on page) · white interior<br>FSD not stated.</p>
+      <p><a href="https://www.victoryottawa.com/inventory/used-2021-tesla-model-y-long-range-awd-4d-sport-utility-5yjygdeexmf116100/">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">LAX CDJR · Inglewood CA · ~1,486 mi</p>
+      <h2>2021 Model Y Long Range AWD · Black</h2>
+      <p class="total">$24,252</p>
+      <p class="facts">50,534 mi · VIN 5YJYGDEE3MF282426 · $24,374 with doc+filing; lower “LAX CDJR Price” needs trade assist + dealer financing<br>FSD not stated.</p>
+      <p><a href="https://www.laxcdjr.com/inventory/used-2021-tesla-model-y-long-range-awd-4d-sport-utility-5yjygdee3mf282426/">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Oakes · Kansas City MO · ~325 mi</p>
+      <h2>2020 Model Y Long Range AWD · Pearl White</h2>
+      <p class="total">$23,000</p>
+      <p class="facts">104,471 mi · VIN 5YJYGDEEXLF058116 · Oakes Price ($22,380 + $620 admin)<br>FSD not stated.</p>
+      <p><a href="https://oakeskia.com/for-sale/used-tesla-model-y-long-range-north-kansas-city-mo/2020-tesla-model-y-long-range-5yjygdeexlf058116">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Hyundai of Fort Myers · FL · ~837 mi</p>
+      <h2>2022 Model Y Long Range AWD · Solid Black</h2>
+      <p class="total">$23,862</p>
+      <p class="facts">83,144 mi · VIN 7SAYGDEE8NF563576 · Purchase Price includes pre-delivery fee per disclaimer<br>FSD not stated.</p>
+      <p><a href="https://www.hyundaioffortmyers.com/inventory/used-2022-tesla-model-y-long-range-awd-sport-utility-7saygdee8nf563576/">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <span class="badge flag">Closest to LR</span>
+      <p class="kicker">Melton Sales · Claremore OK · ~217 mi</p>
+      <h2>2021 Model Y Long Range AWD · Pearl White</h2>
+      <p class="total">$24,689 OTD</p>
+      <p class="facts">105,803 mi · VIN 5YJYGDEE0MF087044 · OTD includes $699 doc (Cars.com ~$23,990 pre-doc)<br>Closest live under-band Y to Little Rock. FSD not stated.</p>
+      <p><a href="https://meltonsales.com/inventory/Used-2021-Tesla-Model_Y-Long_Range-5YJYGDEE0MF087044">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Pristine Mitsubishi · Commack NY · ~1,118 mi</p>
+      <h2>2022 Model Y Long Range AWD · Black</h2>
+      <p class="total">$24,695</p>
+      <p class="facts">73,549 mi · VIN 7SAYGDEE8NF316848 · Pristine Promise price<br>FSD not stated.</p>
+      <p><a href="https://www.pristinemitsubishi.com/inventory/used-2022-tesla-model-y-long-range-awd-4d-sport-utility-7saygdee8nf316848/">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Earl Stewart Toyota · Lake Park FL · ~909 mi</p>
+      <h2>2020 Model Y Performance AWD · Gray</h2>
+      <p class="total">$24,278</p>
+      <p class="facts">86,734 mi · VIN 5YJYGDEF8LF050170 · Value Price, no dealer fees<br>FSD not stated.</p>
+      <p><a href="https://www.earlstewarttoyota.com/inventory/used-2020-tesla-model-y-performance-awd-4d-sport-utility-5yjygdef8lf050170/">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <span class="badge warn">Coming soon</span>
+      <p class="kicker">Karsten &amp; Moore · Mesa AZ · ~1,114 mi</p>
+      <h2>2021 Model Y Standard Range RWD · Midnight Silver</h2>
+      <p class="total">$22,494</p>
+      <p class="facts">46,384 mi · VIN 5YJYGDED8MF113834 · $21,995 + $499 doc · “Coming Soon! Call for details” (offered, not on lot yet)<br>FSD not stated.</p>
+      <p><a href="https://www.karstenandmooreauto.com/inventory/2021-tesla-model-y-standard-range-rear-wheel-drive/1159752">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Karsten &amp; Moore · Mesa AZ</p>
+      <h2>2021 Model Y Standard Range RWD · Solid Black</h2>
+      <p class="total">$24,494</p>
+      <p class="facts">49,653 mi · VIN 5YJYGDED5MF113080 · $23,995 + $499 doc · white interior<br>FSD not stated.</p>
+      <p><a href="https://www.karstenandmooreauto.com/inventory/2021-tesla-model-y-standard-range-rear-wheel-drive/1186428">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Kia of Riverdale · NJ · ~1,069 mi</p>
+      <h2>2021 Model Y Long Range AWD · Black</h2>
+      <p class="total">$21,798</p>
+      <p class="facts">114,359 mi · VIN 5YJYGDEE1MF187704 · Internet Price includes $899 doc<br>FSD not stated.</p>
+      <p><a href="https://www.kiaofriverdale.com/inventory/used-2021-tesla-model-y-long-range-awd-4d-sport-utility-5yjygdee1mf187704/">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Starling Chevrolet · Mount Pleasant SC · ~727 mi</p>
+      <h2>2021 Model Y Long Range AWD · White</h2>
+      <p class="total">$21,373</p>
+      <p class="facts">113,677 mi · VIN 5YJYGDEE7MF232807 · Internet Price ($565 closing included; +$85 reg)<br>FSD not stated.</p>
+      <p><a href="https://www.southcarolinachevy.com/inventory/used-2021-tesla-model-y-long-range-all-wheel-drive-utility-5yjygdee7mf232807/">Dealer listing</a></p>
+    </article>
+
+    <h3>FLAG · high-mile white (dealer verified)</h3>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <span class="badge flag">Closest to captain profile</span>
+      <p class="kicker">Diplomat Motors · Troutdale OR · ~1,744 mi</p>
+      <h2>2021 Model Y LR AWD · Pearl White</h2>
+      <p class="total">$19,490</p>
+      <p class="facts">169,291 mi · VIN 5YJYGDEEXMF074799 · dealer site $19,490 (Cars.com ~$20,285)<br>
+      Closest profile match to ~170k / ~$18.5k white Y. Not confirmed same car as captain candidate. FSD not stated · no SOH on page.</p>
+      <p><a href="https://www.diplomatmotors.com/inventory/tesla/model-y/t074799">Dealer listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge live">Live dealer</span>
+      <p class="kicker">Nissan of Costa Mesa · CA</p>
+      <h2>2021 Model Y LR AWD · Pearl White Multi-Coat</h2>
+      <p class="total">$22,114</p>
+      <p class="facts">135,931 mi · VIN 5YJYGDEE7MF249803 · $21,995 + $85 doc + $34 EVR<br>FSD not stated.</p>
+      <p><a href="https://www.nissanofcostamesa.com/inventory/used-2021-tesla-model-y-long-range-awd-4d-sport-utility-5yjygdee7mf249803/">Dealer listing</a></p>
+    </article>
+
+    <h3>Cars.com-only · dealer page unverified</h3>
+    <p class="note">Do not treat as live until a dealer VDP is checked. Some are very cheap small-lot units that may carry branded titles.</p>
+    <article>
+      <span class="badge warn">Unverified dealer page</span>
+      <p class="facts">
+        Easy Car Auto Sales, Phoenix AZ — 2021 Y LR white · $15,900 · 139,650 mi · VIN 5YJYGDEE1MF212973<br>
+        Premier Automotive, Dumfries VA — 2022 Y LR white · $15,999 · 138,318 mi · VIN 7SAYGDEE3NF323187<br>
+        33 Auto Sale LLC, Katy TX — 2020 Y LR white · $16,900 · 196,115 mi · VIN 5YJYGDEE5LF026593<br>
+        Auto Market Street, Paterson NJ — 2021 Y LR white · $13,949 · 160,680 mi · VIN 5YJYGDEE7MF246013<br>
+        Apex Motors, Tacoma WA — 2021 Y LR white · $20,100 · 171,860 mi · VIN 5YJYGAEE7MF158951<br>
+        Ron Motor Inc., Wantage NJ — 2021 Y LR white · $18,984 · 116,900 mi · VIN 5YJYGDEE3MF300052 (Gauge note; dealer page not Lot-confirmed)<br>
+        AutoNation USA Phoenix Avondale — 2021 Y LR white · $21,899 · 107,903 mi · VIN 5YJYGDED6MF107465 (AutoNation sites blocked to Lot)<br>
+        Joplin Electrified Autos — 2021 Y LR blue $24,980 / 2023 Perf gray $24,980 (dealer Cloudflare; failed verify)
+      </p>
+    </article>
+  </section>
+
+  <section id="compare" class="panel">
+    <p class="basis">White Y captain candidate vs LR Model 3s vs best live dealer Model Ys. Prices as listed; FSD notes from dealer/captain copy.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th>Price</th>
+          <th>Miles</th>
+          <th>Color</th>
+          <th>FSD</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>White Y captain (pending)</td>
+          <td>~$18,500</td>
+          <td>~170k</td>
+          <td>White</td>
+          <td>Subscription (~$100/mo)</td>
+        </tr>
+        <tr>
+          <td>Porsche LR 2021 M3 SR+</td>
+          <td>~$17,491 / ~$19,410 OTD-ish</td>
+          <td>110,210</td>
+          <td>White (schema)</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Crain Conway 2020 M3 Std</td>
+          <td>~$19,500–$19,629</td>
+          <td>112,330</td>
+          <td>—</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Diplomat Troutdale 2021 Y</td>
+          <td>$19,490</td>
+          <td>169,291</td>
+          <td>Pearl White</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Starling Mt Pleasant 2021 Y</td>
+          <td>$21,373</td>
+          <td>113,677</td>
+          <td>White</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Kia Riverdale 2021 Y</td>
+          <td>$21,798</td>
+          <td>114,359</td>
+          <td>Black</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Victory Ottawa 2021 Y</td>
+          <td>$22,099</td>
+          <td>117,963</td>
+          <td>Red</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Sam Leman Bloomington 2021 Y</td>
+          <td>$22,262</td>
+          <td>64,399</td>
+          <td>White</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Karsten Mesa 2021 Y SR (Coming Soon)</td>
+          <td>$22,494</td>
+          <td>46,384</td>
+          <td>Silver</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Melton Claremore 2021 Y (closest to LR)</td>
+          <td>$24,689 OTD</td>
+          <td>105,803</td>
+          <td>Pearl White</td>
+          <td>Not stated</td>
+        </tr>
+        <tr>
+          <td>Recharged JAX 2018 M3 LR (prior #1)</td>
+          <td>$22,998</td>
+          <td>64,237</td>
+          <td>Solid Black</td>
+          <td>Included / activated</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="prior" class="panel">
+    <p class="basis">Earlier shortlist kept for the full picture. Frontier-airport reds and purchased-FSD picks from Oct 2–5 sweeps. #1 was still live AM Oct 5.</p>
+
+    <h3>Purchased FSD / Included</h3>
+    <article>
+      <span class="badge live">Prior #1 · live AM Oct 5</span>
+      <p class="kicker">Recharged · Jacksonville FL</p>
+      <h2>2018 Model 3 Long Range RWD · Solid Black</h2>
+      <p class="total">$22,998</p>
+      <p class="facts">64,237 mi · VIN 5YJ3E1EA4JF057780 · no doc fee<br>
+      Page: “Full Self-Driving included” / “FSD activated” · HW3 · screen photo Included / FSD v14.1 Lite<br>
+      7505 Blanding Blvd, Jacksonville, FL 32244</p>
+      <p><a href="https://recharged.com/vehicles/tesla/model-3/5YJ3E1EA4JF057780">Listing</a></p>
+    </article>
+
+    <article>
+      <p class="kicker">Century Auto · Daly City · SFO ~14 min</p>
+      <h2>2020 Model 3 Performance AWD · White</h2>
+      <p class="total">$24,900</p>
+      <p class="facts">99,492 mi · VIN 5YJ3E1ECXLF624353 · Ad says lifetime paid FSD</p>
+      <p><a href="https://www.century-cars.com/pre-owned-cars/detail/2020-Tesla-Model-3/1590356">Listing</a></p>
+    </article>
+
+    <article>
+      <span class="badge warn">Ghost / not on lot</span>
+      <p class="kicker">Robo Rides · Hot Springs AR · dropped from live LR rank</p>
+      <h2>2018 Model 3 Long Range RWD · Red</h2>
+      <p class="total">$18,900 (ad conflict $24,500)</p>
+      <p class="facts">~87.2–87.5k mi · VIN 5YJ3E1EA1JF061852 · FME ads still online; Lot treats as not on lot. Screen showed Included.</p>
+      <p><a href="https://www.findmyelectric.com/listings/2018-tesla-model-3-long-range-rwd-365795/">FME listing</a></p>
+    </article>
+
+    <h3>Easy-trip reds (Oct 2 Frontier set · FSD subscription assumed)</h3>
     <article>
       <figure><img src="r1.jpg" alt="Red 2018 Tesla Model 3 at Easy Car Auto Sales in Phoenix"></figure>
-      <p class="kicker">1, Phoenix airport, about 2 miles</p>
+      <p class="kicker">Phoenix airport · ~2 miles</p>
       <h2>Easy Car Auto Sales, Phoenix</h2>
-      <p class="total">$417</p>
-      <p class="split">Loan $317 · FSD $100</p>
-      <p class="facts">2018 Mid Range, rear-wheel drive, red. 70,324 miles. Price $17,900.<br>VIN 5YJ3E1EA3JF154999</p>
+      <p class="facts">2018 Mid Range RWD red · 70,324 mi · $17,900 · VIN 5YJ3E1EA3JF154999</p>
       <p><a href="https://www.cars.com/vehicledetail/8eb67226-cd1f-4b47-a6e8-afc2e453e805/">Listing</a></p>
     </article>
     <article>
       <figure><img src="r2.jpg" alt="Red 2019 Tesla Model 3 at Auto Sale of K and Z in Fullerton"></figure>
-      <p class="kicker">2, John Wayne airport, about 25 minutes</p>
+      <p class="kicker">John Wayne · ~25 minutes</p>
       <h2>Auto Sale of K and Z, Fullerton</h2>
-      <p class="total">$437</p>
-      <p class="split">Loan $337 · FSD $100</p>
-      <p class="facts">2019 Standard Range Plus, red. 78,523 miles. Price $18,999.<br>VIN 5YJ3E1EA1KF412776</p>
+      <p class="facts">2019 SR+ red · 78,523 mi · $18,999 · VIN 5YJ3E1EA1KF412776</p>
       <p><a href="https://www.autosalenewport.com/pre-owned-cars/Tesla">Listing</a></p>
     </article>
     <article>
       <figure><img src="r4.jpg" alt="Red 2018 Tesla Model 3 at Regency USA in Lawndale"></figure>
-      <p class="kicker">3, LAX, about 6 miles</p>
+      <p class="kicker">LAX · ~6 miles</p>
       <h2>Regency USA, Lawndale</h2>
-      <p class="total">$401</p>
-      <p class="split">Loan $301 · FSD $100</p>
-      <p class="facts">2018 Long Range, rear-wheel drive, red. 111,842 miles. Price $16,970.<br>VIN 5YJ3E1EAXJF008955</p>
+      <p class="facts">2018 LR RWD red · 111,842 mi · $16,970 · VIN 5YJ3E1EAXJF008955</p>
       <p><a href="https://www.cars.com/vehicledetail/646072fc-a62d-49da-a3fd-a38303e67b22/">Listing</a></p>
     </article>
     <article>
       <figure><img src="r5.jpg" alt="Red 2019 Tesla Model 3 at Karsten and Moore in Mesa"></figure>
-      <p class="kicker">4, Phoenix airport, about 22 miles</p>
+      <p class="kicker">Phoenix · ~22 miles</p>
       <h2>Karsten and Moore, Mesa</h2>
-      <p class="total">$366</p>
-      <p class="split">Loan $266 · FSD $100</p>
-      <p class="facts">2019 Standard Range, rear-wheel drive, red. 121,250 miles. Price $14,995. About $375 if the $499 doc fee is financed.<br>VIN 5YJ3E1EA1KF299671</p>
+      <p class="facts">2019 Standard RWD red · 121,250 mi · $14,995 · VIN 5YJ3E1EA1KF299671</p>
       <p><a href="https://www.autotrader.com/cars-for-sale/vehicle/782147589">Listing</a></p>
     </article>
-  </section>
 
-  <section id="fsd" class="panel">
-    <p class="basis">Purchased FSD, so the big number is the loan only. 72 months at 8.39% on the price shown, before tax. No extra $100.</p>
+    <h3>Other prior FSD / runners</h3>
     <article>
-    <article>
-      <figure><img src="r6.jpg" alt="White 2020 Tesla Model 3 at Century Auto in Daly City"></figure>
-      <p class="kicker">1, SFO, about 14 minutes</p>
-      <h2>Century Auto, Daly City</h2>
-      <p class="total">$441</p>
-      <p class="split">Loan $441 · FSD included</p>
-      <p class="facts">2020 Performance, all-wheel drive, white. 99,492 miles. Price $24,900.<br>VIN 5YJ3E1ECXLF624353<br>Ad says lifetime paid FSD.</p>
-      <p><a href="https://www.century-cars.com/pre-owned-cars/detail/2020-Tesla-Model-3/1590356">Listing</a></p>
-    </article>
-      <p class="kicker">2, Hot Springs, Arkansas. The trip is the hard part.</p>
-      <h2>Robo Rides, Hot Springs</h2>
-      <p class="total">$335</p>
-      <p class="split">Loan $335 · FSD included</p>
-      <p class="facts">2018 Long Range, rear-wheel drive, red. 87,500 miles. Price $18,900.<br>VIN 5YJ3E1EA1JF061852<br>No nearby Frontier airport. Bus is Dallas to Bryant, then about 37 miles to Hot Springs.</p>
-      <p><a href="https://www.findmyelectric.com/listings/2018-tesla-model-3-long-range-rwd-365795/">Listing</a></p>
+      <p class="facts">
+        Zoom Auto Dumfries VA — 2021 M3 SR+ black · $19,995 · 57,194 mi · VIN 5YJ3E1EA4MF089584 · “LIFETIME FSD PACKAGE INCLUDED” flyer<br>
+        Recharge Sioux Falls — 2019 M3 LR AWD grey · $21,990 · 98,628 mi · VIN 5YJ3E1EB6KF453008 · “Included Package” on spec sheet<br>
+        EV Saints Rialto — 2020 M3 LR AWD Pearl White · $23,800 · 100,621 mi · VIN 5YJ3E1EB6LF798170 · screen Included
+      </p>
     </article>
   </section>
 </main>
