@@ -24,9 +24,30 @@
   a { color: #0b57d0; }
   .panel { display: none; }
   .panel.on { display: block; }
+
+  #gate { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+  #gate form { display: flex; gap: 8px; }
+  #gate input { flex: 1; font: inherit; font-size: 1rem; padding: 12px; border-radius: 12px; border: 1px solid #d7d4ce; }
+  #gate button { font: inherit; font-weight: 700; padding: 12px 16px; border-radius: 12px; border: 0; background: #161616; color: #fff; }
+  #gate .miss { color: #8a1f1f; min-height: 1.2em; }
+  html:not(.open) main { display: none !important; }
+  html.open #gate { display: none; }
 </style>
+<script>
+  // Password turns itself back on at this instant. Bump it 24h from each ask about this site.
+  var OPEN_UNTIL = Date.parse("2026-10-05T19:04:00-06:00");
+  if (Date.now() < OPEN_UNTIL) document.documentElement.classList.add("open");
+</script>
 </head>
 <body>
+<div id="gate">
+  <h1>Tesla shortlist</h1>
+  <form id="gate-form">
+    <input id="gate-pass" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password">
+    <button type="submit">Open</button>
+  </form>
+  <p class="miss" id="gate-miss"></p>
+</div>
 <main>
   <h1>Tesla shortlist</h1>
   <p class="asof">Friday, Oct 2, 2026, evening MT.</p>
@@ -103,6 +124,22 @@
       document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("on"); });
       btn.classList.add("on");
       document.getElementById(btn.dataset.tab).classList.add("on");
+    });
+  });
+</script>
+<script>
+  var PASS_HASH = "7867816edcbc2ea5745874fdb6594f1d7a9695cc12c8d5498828017b6748b8c5";
+  document.getElementById("gate-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var text = document.getElementById("gate-pass").value;
+    crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buf) {
+      var hex = Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+      if (hex === PASS_HASH) {
+        document.documentElement.classList.add("open");
+        document.getElementById("gate-miss").textContent = "";
+      } else {
+        document.getElementById("gate-miss").textContent = "Wrong password.";
+      }
     });
   });
 </script>
